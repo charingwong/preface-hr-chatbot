@@ -1,1 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preface HR Assistant</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
+    <style>
+        /* Base Reset and Full-Screen Layout */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f9fafb;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Front-end Layout Wrapper to give it a clean, branded feel */
+        .hr-chat-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Branding Navigation */
+        .hr-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .hr-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hr-logo-placeholder {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff4e50, #f9d423); /* Branded placeholder gradient */
+            border-radius: 8px;
+        }
+
+        .hr-title {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .hr-subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-left: 8px;
+        }
+
+        /* The Target Container where n8n will render the chat */
+        #n8n-chat-target {
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 57px); /* Subtracting header height dynamically */
+            position: relative;
+        }
+
+        /* CSS Variables to override @n8n/chat layout styling defaults */
+        :root {
+            --chat--primary-color: #ff4e50;               /* Primary Brand Accent Color */
+            --chat--primary-color__hover: #e03e40;        /* Hover States */
+            --chat--bg-color: #ffffff;                    /* Chat Window Background */
+            --chat--dark-bg-color: #111827;               /* Dark Theme Background (if utilized) */
+            --chat--text-color: #111827;                  /* Main Font Color */
+            --chat--spacing: 16px;                        /* Structural Padding/Gaps */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hr-chat-container">
+        <header class="hr-header">
+            <div class="hr-brand">
+                <div class="hr-logo-placeholder"></div>
+                <h1 class="hr-title">Preface HR Workspace <span class="hr-subtitle">| Internal Policy Assistant</span></h1>
+            </div>
+        </header>
+
+        <div id="n8n-chat-target"></div>
+    </div>
+
+    <script type="module">
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+        createChat({
+            // Target DOM wrapper selector
+            target: '#n8n-chat-target',
+            
+            // Mode 'fullscreen' forces the interface to snap completely to the layout wrapper dimensions
+            mode: 'fullscreen',
+            
+            // Webhook Configuration
+            webhookUrl: 'https://YOUR_N8N_INSTANCE_URL/webhook/YOUR-CHAT-TRIGGER-PATH', 
+            webhookConfig: {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Add authentication tokens or enterprise headers here if required
+                }
+            },
+
+            // Feature Controls & Toggles
+            showWelcomeScreen: true,
+            allowFileUploads: false,          /* Switch to true if employees submit file attachments (e.g., doctor notes) */
+            allowedFilesMimeTypes: 'image/*,application/pdf', 
+            enableStreaming: true,            /* Ensure your n8n workflow 'Chat Trigger' has streaming response enabled */
+            
+            // Text Content Customization (Preface Context)
+            initialMessages: [
+                'Welcome to Preface HR Hub! 👋',
+                'I can help you look up policies regarding leaves, corporate expenses, learning budgets, and other inquiries. What can I answer for you today?'
+            ],
+            i18n: {
+                en: {
+                    title: 'Preface HR Assistant',
+                    subtitle: 'Powered by Preface AI Agent',
+                    inputPlaceholder: 'Ask a question about internal HR policies...',
+                    getStartedButton: 'Start Chatting',
+                    sendButtonTooltip: 'Send inquiry'
+                }
+            },
+
+            // Interface Aesthetic Customization
+            metadata: {
+                enterpriseBranding: 'Preface Workspace'
+            },
+            style: {
+                // Inline structural customization if specific modifications are required
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            }
+        });
+    </script>
+</body>
+</html>
